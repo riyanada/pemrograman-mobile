@@ -1,34 +1,16 @@
-# Kumpulan Tugas Pemograman Mobile
+# belajar_flutter
 
-## D112121062 -  Riyan
+A new Flutter project.
 
-## Clone Repository 
-### Week 2
-```sh
-git clone -b week-2 https://github.com/riyanada/pemrograman-mobile.git
-```
+## Getting Started
 
-### Week 3
-```sh
-git clone -b week-3 https://github.com/riyanada/pemrograman-mobile.git
-```
+This project is a starting point for a Flutter application.
 
-### Week 4
-```sh
-git clone -b week-4 https://github.com/riyanada/pemrograman-mobile.git
-```
+A few resources to get you started if this is your first Flutter project:
 
-### Week 5
-```sh
-git clone -b week-5 https://github.com/riyanada/pemrograman-mobile.git
-```
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-### Week 6
-```sh
-git clone -b week-6 https://github.com/riyanada/pemrograman-mobile.git
-```
-
-## Link deploy
-- 
-
-## Link Demo
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
