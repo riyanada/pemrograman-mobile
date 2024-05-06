@@ -4,53 +4,49 @@ void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
+    const appTitle = 'Form Styling Demo';
     return MaterialApp(
-      title: 'Biodata Page',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      title: appTitle,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(appTitle),
+        ),
+        body: const MyCustomForm(),
       ),
-      home: const BiodataPage(),
     );
   }
 }
 
-class BiodataPage extends StatelessWidget {
-  const BiodataPage({super.key});
+class MyCustomForm extends StatelessWidget {
+  const MyCustomForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Biodata'),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Nama: Riyan',
-              style: TextStyle(fontSize: 20),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter a search term',
             ),
-            SizedBox(height: 10),
-            Text(
-              'Umur: 25 tahun',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Alamat: Jl. Kamarung No.69',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Pekerjaan: Mahasiswa',
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
+          ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Enter your username',
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
