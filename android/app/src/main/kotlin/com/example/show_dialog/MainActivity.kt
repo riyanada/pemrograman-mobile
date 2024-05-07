@@ -1,4 +1,4 @@
-package com.example.notification
+package com.example.show_dialog
 
 import io.flutter.embedding.android.FlutterActivity
 

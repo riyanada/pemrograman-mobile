@@ -1,86 +1,157 @@
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:async';
 
-class ToastPage extends StatefulWidget {
-  const ToastPage({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+class DialogPage extends StatefulWidget {
+  const DialogPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ToastPageState createState() => _ToastPageState();
+  _DialogPageState createState() => _DialogPageState();
 }
 
-class _ToastPageState extends State<ToastPage> {
+class _DialogPageState extends State<DialogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Toast'),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                  child: const Text('Show Long Toast'),
-                  onPressed: () {
-                    Fluttertoast.showToast(
-                      msg: "This is Long Toast",
-                      toastLength: Toast.LENGTH_LONG,
-                    );
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                  child: const Text('Show Short Toast'),
-                  onPressed: () {
-                    Fluttertoast.showToast(
-                        msg: "This is Short Toast",
-                        toastLength: Toast.LENGTH_SHORT,
-                        timeInSecForIosWeb: 1);
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                  child: const Text('Show Center Short Toast'),
-                  onPressed: () {
-                    Fluttertoast.showToast(
-                        msg: "This is Center Short Toast",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1);
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                  child: const Text('Show Top Short Toast'),
-                  onPressed: () {
-                    Fluttertoast.showToast(
-                        msg: "This is Top Short Toast",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.TOP,
-                        timeInSecForIosWeb: 1);
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                  child: const Text('Show Colored Toast'),
-                  onPressed: () {
-                    Fluttertoast.showToast(
-                        msg: "This is Colored Toast",
-                        toastLength: Toast.LENGTH_SHORT,
-                        backgroundColor: Colors.greenAccent,
-                        textColor: Colors.black54);
-                  }),
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text('Dialog Demo'),
         ),
-      ),
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                child: const Text('Show Material Dialog'),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Material Dialog'),
+                          content: const Text('Hey! I am Coflutter!'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('close')),
+                            TextButton(
+                              onPressed: () {
+                                print('Hello World!');
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Hello World!'),
+                            )
+                          ],
+                        );
+                      });
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                child: const Text('Show Cupertino Dialog'),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                          title: const Text('Cupertino Dialog'),
+                          content: const Text('Hey! I am Coflutter!'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('close')),
+                            TextButton(
+                              onPressed: () {
+                                print('Hello World!');
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Hello World!'),
+                            )
+                          ],
+                        );
+                      });
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                child: const Text('Show Loading Dialog for 30 seconds'),
+                onPressed: () {
+                  late Timer _timer;
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      _timer = Timer(const Duration(seconds: 30), () {
+                        Navigator.of(context).pop();
+                      });
+                      return AlertDialog(
+                        content: Row(
+                          children: [
+                            const CircularProgressIndicator(),
+                            Container(
+                                margin: const EdgeInsets.only(left: 7),
+                                child: const Text("Loading please wait ..")),
+                          ],
+                        ),
+                      );
+                    },
+                  ).then((value) => {
+                        if (_timer.isActive) {_timer.cancel()}
+                      });
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                child: const Text('Show Simple Dialog'),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SimpleDialog(
+                          title: const Text('Chose an Option'),
+                          children: <Widget>[
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Option 1'),
+                            ),
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Option 2'),
+                            ),
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Option 3'),
+                            ),
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Option 4'),
+                            ),
+                          ],
+                        );
+                      });
+                },
+              )
+            ],
+          ),
+        ));
   }
 }
 
@@ -94,7 +165,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const ToastPage(),
+      home: const DialogPage(),
     );
   }
 }

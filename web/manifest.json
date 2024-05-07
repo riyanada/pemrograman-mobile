@@ -1,6 +1,6 @@
 {
-    "name": "notification",
-    "short_name": "notification",
+    "name": "show_dialog",
+    "short_name": "show_dialog",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
