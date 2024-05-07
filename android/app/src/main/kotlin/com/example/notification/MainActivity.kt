@@ -1,4 +1,4 @@
-package com.example.tugas_5
+package com.example.notification
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,6 @@
 {
-    "name": "tugas_5",
-    "short_name": "tugas_5",
+    "name": "notification",
+    "short_name": "notification",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
