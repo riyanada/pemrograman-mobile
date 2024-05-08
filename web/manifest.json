@@ -1,6 +1,6 @@
 {
-    "name": "show_dialog",
-    "short_name": "show_dialog",
+    "name": "listview",
+    "short_name": "listview",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
