@@ -17,12 +17,16 @@ class ItemUser extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             CircleAvatar(
-              radius: 24,
-              backgroundColor: Colors.lightGreen,
-              child: Text(
-                data.codeName,
-                style: const TextStyle(color: Colors.white),
-              ),
+              backgroundImage:
+                  data.codeName.length != 2 ? AssetImage(data.codeName) : null,
+              radius: 30,
+              child: data.codeName.length == 2
+                  ? Text(
+                      data.codeName,
+                      style:
+                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    )
+                  : null,
             ),
             Expanded(
                 child: Container(
@@ -38,7 +42,7 @@ class ItemUser extends StatelessWidget {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 2),
-                    child: Text(data.major),
+                    child: Text(data.nim),
                   ),
                 ],
               ),
