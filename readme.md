@@ -8,10 +8,10 @@
 git clone -b week-2 https://github.com/riyanada/pemrograman-mobile.git
 ```
 
-### Week 3
+<!-- ### Week 3
 ```sh
 git clone -b week-3 https://github.com/riyanada/pemrograman-mobile.git
-```
+``` -->
 
 ### Week 4
 ```sh
@@ -23,9 +23,29 @@ git clone -b week-4 https://github.com/riyanada/pemrograman-mobile.git
 git clone -b week-5 https://github.com/riyanada/pemrograman-mobile.git
 ```
 
-### Week 6
+### Week 6 Notification
 ```sh
-git clone -b week-6 https://github.com/riyanada/pemrograman-mobile.git
+git clone -b week-6-notif https://github.com/riyanada/pemrograman-mobile.git
+```
+
+### Week 6 Show Dialog
+```sh
+git clone -b week-6-dialog https://github.com/riyanada/pemrograman-mobile.git
+```
+
+### Week 7
+```sh
+git clone -b week-7 https://github.com/riyanada/pemrograman-mobile.git
+```
+
+### Week 7 Tugas
+```sh
+git clone -b week-7-tugas https://github.com/riyanada/pemrograman-mobile.git
+```
+
+### Week 8 Tugas
+```sh
+git clone -b week-8-tugas https://github.com/riyanada/pemrograman-mobile.git
 ```
 
 ## Link deploy
