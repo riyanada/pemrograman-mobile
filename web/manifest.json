@@ -1,6 +1,6 @@
 {
-    "name": "listview",
-    "short_name": "listview",
+    "name": "bottomnavigationbar",
+    "short_name": "bottomnavigationbar",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
