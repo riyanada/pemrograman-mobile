@@ -47,6 +47,20 @@ git clone -b week-7-tugas https://github.com/riyanada/pemrograman-mobile.git
 ```sh
 git clone -b week-8-tugas https://github.com/riyanada/pemrograman-mobile.git
 ```
+### Week 9 UTS
+```sh
+git clone -b week-uts https://github.com/riyanada/pemrograman-mobile.git
+```
+
+### Week 10
+```sh
+git clone -b week-10 https://github.com/riyanada/pemrograman-mobile.git
+```
+
+### Week 10 Tugas
+```sh
+git clone -b week-8-tugas https://github.com/riyanada/pemrograman-mobile.git
+```
 
 ## Link deploy
 - 
