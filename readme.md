@@ -59,7 +59,7 @@ git clone -b week-10 https://github.com/riyanada/pemrograman-mobile.git
 
 ### Week 10 Tugas
 ```sh
-git clone -b week-8-tugas https://github.com/riyanada/pemrograman-mobile.git
+git clone -b week-10-tugas https://github.com/riyanada/pemrograman-mobile.git
 ```
 
 ## Link deploy
