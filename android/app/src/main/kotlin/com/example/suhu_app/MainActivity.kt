@@ -1,4 +1,4 @@
-package com.example.bottomnavigationbar
+package com.example.suhu_app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,149 +1,238 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MainApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Profile Friends',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const ProfilePage(),
+    return const MaterialApp(
+      home: RadioButtonPage(),
     );
   }
 }
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class RadioButtonPage extends StatefulWidget {
+  const RadioButtonPage({super.key});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<RadioButtonPage> createState() => _RadioButtonPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  int _selectedIndex = 0;
+class _RadioButtonPageState extends State<RadioButtonPage> {
+  String jenis = "";
+  double hasilKonversi = 0;
+  String textCelcius = "";
+  int radioValue = 0;
 
-  final List<Map<String, String>> _friends = [
-    {
-      'name': 'Alma Sulaiman',
-      'nim': 'D112121065',
-      'imageAsset': 'assets/images/alma.png',
-      'additionalInfo': 'Apapun masalahnya, Live solusinya!',
-    },
-    {
-      'name': 'Ikhsan Fauzan',
-      'nim': 'D112121063',
-      'imageAsset': 'assets/images/ikhsan.png',
-      'additionalInfo': 'Menjual berbagai emas!',
-    },
-    {
-      'name': 'Nur Hidayat',
-      'nim': 'D112121058',
-      'imageAsset': 'assets/images/nur.jpg',
-      'additionalInfo': 'Suhu nih bos senggol dong',
-    },
-    {
-      'name': 'Sarah Fadilah',
-      'nim': 'D112121064',
-      'imageAsset': 'assets/images/sarah.jpeg',
-      'additionalInfo': 'Nice to meet you!',
-    },
-    {
-      'name': 'Wahyu Safrizal',
-      'nim': 'D112121056',
-      'imageAsset': 'assets/images/way.png',
-      'additionalInfo': 'My Cars is Fast!',
-    },
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void hitungKonversi() {
+    if (textCelcius == "") {
+      Fluttertoast.showToast(
+          msg: "Masukkan nilai suhu yang akan di konversikan",
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Colors.red[600],
+          textColor: Colors.white);
+      return;
+    }
+    double celsius = double.parse(textCelcius);
+    if (radioValue == 1) {
+      setState(() {
+        jenis = "Reamur";
+        hasilKonversi = (4 / 5) * celsius;
+      });
+    } else if (radioValue == 2) {
+      setState(() {
+        jenis = "Kelvin";
+        hasilKonversi = 273 + celsius;
+      });
+    } else {
+      setState(() {
+        jenis = "Fahrenheit";
+        hasilKonversi = (9 / 5 * celsius) + 32;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Profile Friends'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundImage:
-                  AssetImage(_friends[_selectedIndex]['imageAsset']!),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              _friends[_selectedIndex]['name']!,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text(_friends[_selectedIndex]['nim']!),
-            const SizedBox(height: 20),
-            Text(_friends[_selectedIndex]['additionalInfo']!),
-          ],
+        title: const Align(
+          alignment: Alignment.center,
+          child: Text('Konversi Suhu'),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundImage: AssetImage(_friends[0]['imageAsset']!),
-              backgroundColor: Colors.transparent,
-              radius: 12,
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(color: Colors.amber[100]),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "\u00b0C",
+                        style: TextStyle(
+                            fontSize: 100,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green[100]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            jenis == ""
+                                ? "Hasil Konversi"
+                                : "Hasil Konversi ke $jenis adalah $hasilKonversi",
+                            style: TextStyle(
+                                fontSize: 20, color: Colors.green[800]),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            label: _friends[0]['name']?.split(' ')[0],
           ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundImage: AssetImage(_friends[1]['imageAsset']!),
-              backgroundColor: Colors.transparent,
-              radius: 12,
+          Expanded(
+            flex: 3,
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(color: Colors.blue[100]),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Masukkan Nilai Celcius",
+                        style: TextStyle(fontSize: 18, color: Colors.blue[900]),
+                      ),
+                      SizedBox(
+                        width: 100,
+                        child: TextField(
+                          onChanged: (e) => textCelcius = e,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.black54),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Pilih Konversi",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                fontSize: 18,
+                                color: Colors.blue[900],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 1,
+                            groupValue: radioValue,
+                            onChanged: (value) {
+                              setState(() {
+                                radioValue = 1;
+                              });
+                            },
+                          ),
+                          Text(
+                            "Reamur",
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.blue[900]),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 2,
+                            groupValue: radioValue,
+                            onChanged: (value) {
+                              setState(() {
+                                radioValue = 2;
+                              });
+                            },
+                          ),
+                          Text(
+                            "Kelvin",
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.blue[900]),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 3,
+                            groupValue: radioValue,
+                            onChanged: (value) {
+                              setState(() {
+                                radioValue = 3;
+                              });
+                            },
+                          ),
+                          Text(
+                            "Fahrenheit",
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.blue[900]),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            hitungKonversi();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                          child: Text(
+                            "Hitung",
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.blue[900]),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-            label: _friends[1]['name']?.split(' ')[0],
-          ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundImage: AssetImage(_friends[2]['imageAsset']!),
-              backgroundColor: Colors.transparent,
-              radius: 12,
-            ),
-            label: _friends[2]['name']?.split(' ')[0],
-          ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundImage: AssetImage(_friends[3]['imageAsset']!),
-              backgroundColor: Colors.transparent,
-              radius: 12,
-            ),
-            label: _friends[3]['name']!.split(' ')[0],
-          ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundImage: AssetImage(_friends[4]['imageAsset']!),
-              backgroundColor: Colors.transparent,
-              radius: 12,
-            ),
-            label: _friends[4]['name']!.split(' ')[0],
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.purple,
-        backgroundColor: Colors.black,
-        onTap: _onItemTapped,
       ),
     );
   }

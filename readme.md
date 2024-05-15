@@ -1,3 +1,3 @@
-# bottomnavigationbar
+# suhu_app
 
 A new Flutter project.
