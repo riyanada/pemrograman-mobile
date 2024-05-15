@@ -11,48 +11,57 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: RadioButtonPage(),
+      home: CurrencyConverterPage(),
     );
   }
 }
 
-class RadioButtonPage extends StatefulWidget {
-  const RadioButtonPage({super.key});
+class CurrencyConverterPage extends StatefulWidget {
+  const CurrencyConverterPage({super.key});
 
   @override
-  State<RadioButtonPage> createState() => _RadioButtonPageState();
+  State<CurrencyConverterPage> createState() => _CurrencyConverterPageState();
 }
 
-class _RadioButtonPageState extends State<RadioButtonPage> {
+class _CurrencyConverterPageState extends State<CurrencyConverterPage> {
   String jenis = "";
   double hasilKonversi = 0;
-  String textCelcius = "";
+  String textRupiah = "";
   int radioValue = 0;
 
   void hitungKonversi() {
-    if (textCelcius == "") {
+    if (textRupiah == "") {
       Fluttertoast.showToast(
-          msg: "Masukkan nilai suhu yang akan di konversikan",
+          msg: "Masukkan nilai Rupiah yang akan di konversikan",
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: Colors.red[600],
           textColor: Colors.white);
       return;
     }
-    double celsius = double.parse(textCelcius);
+    double rupiah = double.parse(textRupiah);
     if (radioValue == 1) {
       setState(() {
-        jenis = "Reamur";
-        hasilKonversi = (4 / 5) * celsius;
+        jenis = "USD";
+        hasilKonversi = rupiah / 15956;
+        hasilKonversi = double.parse(hasilKonversi.toStringAsFixed(2));
       });
     } else if (radioValue == 2) {
       setState(() {
-        jenis = "Kelvin";
-        hasilKonversi = 273 + celsius;
+        jenis = "EURO";
+        hasilKonversi = rupiah / 17332;
+        hasilKonversi = double.parse(hasilKonversi.toStringAsFixed(2));
+      });
+    } else if (radioValue == 3) {
+      setState(() {
+        jenis = "RINGGIT";
+        hasilKonversi = rupiah / 3300;
+        hasilKonversi = double.parse(hasilKonversi.toStringAsFixed(2));
       });
     } else {
       setState(() {
-        jenis = "Fahrenheit";
-        hasilKonversi = (9 / 5 * celsius) + 32;
+        jenis = "YEN";
+        hasilKonversi = rupiah / 130;
+        hasilKonversi = double.parse(hasilKonversi.toStringAsFixed(2));
       });
     }
   }
@@ -64,7 +73,7 @@ class _RadioButtonPageState extends State<RadioButtonPage> {
       appBar: AppBar(
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Konversi Suhu'),
+          child: Text('Konversi Mata Uang'),
         ),
       ),
       body: Column(
@@ -83,7 +92,7 @@ class _RadioButtonPageState extends State<RadioButtonPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        "\u00b0C",
+                        "IDR",
                         style: TextStyle(
                             fontSize: 100,
                             fontWeight: FontWeight.bold,
@@ -122,13 +131,13 @@ class _RadioButtonPageState extends State<RadioButtonPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "Masukkan Nilai Celcius",
+                        "Masukkan Nilai Rupiah",
                         style: TextStyle(fontSize: 18, color: Colors.blue[900]),
                       ),
                       SizedBox(
                         width: 100,
                         child: TextField(
-                          onChanged: (e) => textCelcius = e,
+                          onChanged: (e) => textRupiah = e,
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
@@ -165,7 +174,7 @@ class _RadioButtonPageState extends State<RadioButtonPage> {
                             },
                           ),
                           Text(
-                            "Reamur",
+                            "USD (15956)",
                             style: TextStyle(
                                 fontSize: 18, color: Colors.blue[900]),
                           )
@@ -183,7 +192,7 @@ class _RadioButtonPageState extends State<RadioButtonPage> {
                             },
                           ),
                           Text(
-                            "Kelvin",
+                            "EURO (17332)",
                             style: TextStyle(
                                 fontSize: 18, color: Colors.blue[900]),
                           )
@@ -201,7 +210,25 @@ class _RadioButtonPageState extends State<RadioButtonPage> {
                             },
                           ),
                           Text(
-                            "Fahrenheit",
+                            "RINGGIT (3300)",
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.blue[900]),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 4,
+                            groupValue: radioValue,
+                            onChanged: (value) {
+                              setState(() {
+                                radioValue = 4;
+                              });
+                            },
+                          ),
+                          Text(
+                            "YEN (130)",
                             style: TextStyle(
                                 fontSize: 18, color: Colors.blue[900]),
                           )
