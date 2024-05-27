@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'ui/login.dart';
 
 class MainApp extends StatelessWidget {
@@ -10,10 +9,10 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromRGBO(32, 63, 129, 1.0),
+          seedColor: const Color.fromARGB(255, 1, 132, 240),
         ),
       ),
-      home: const Login(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -1,32 +1,123 @@
 import 'package:flutter/material.dart';
-import 'package:login_flutter/ui/page.dart';
+import 'package:login_flutter/page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => const MyHomePage()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _LoginState createState() => _LoginState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-
   final FocusNode _focusNodePassword = FocusNode();
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
   bool _obscurePassword = true;
   final Map<String, String> _userAccounts = {
-    'username1': 'password1',
-    'username2': 'password2',
-    // Tambahkan lebih banyak username dan password jika diperlukan
+    'riyanada': 'P4ssw0rd',
+    'adariyan': 'P4ssw0rd',
   };
+
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      String enteredUsername = _controllerUsername.text;
+      String enteredPassword = _controllerPassword.text;
+
+      if (_userAccounts[enteredUsername] == enteredPassword) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Login Berhasil'),
+              content: Text('Selamat Datang, $enteredUsername!'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Tutup dialog
+                  },
+                  child: const Text('Batal'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyHomePage(),
+                      ),
+                    );
+                  },
+                  child: const Text('Ya'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid username or password.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      backgroundColor: Colors.orangeAccent,
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -34,14 +125,18 @@ class _LoginState extends State<Login> {
           child: Column(
             children: [
               const SizedBox(height: 150),
-              Text(
-                "Welcome back",
-                style: Theme.of(context).textTheme.headlineMedium,
+              const Text(
+                'TEDC Mobile Apps',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 10),
-              Text(
-                "Login to your account",
-                style: Theme.of(context).textTheme.titleMedium,
+              const SizedBox(height: 20),
+              Image.asset(
+                'assets/images/logo.png',
+                height: 150,
               ),
               const SizedBox(height: 60),
               TextFormField(
@@ -64,7 +159,6 @@ class _LoginState extends State<Login> {
                   } else if (!_userAccounts.containsKey(value)) {
                     return "Username is not registered.";
                   }
-
                   return null;
                 },
               ),
@@ -100,55 +194,64 @@ class _LoginState extends State<Login> {
                   } else if (value != _userAccounts[_controllerUsername.text]) {
                     return "Wrong password.";
                   }
-
                   return null;
                 },
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Checkbox(
+                    value: false, // Tambahkan logika Remember Me di sini
+                    onChanged: (bool? value) {
+                      // Tambahkan logika Remember Me di sini
+                    },
+                  ),
+                  const Text('Remember Me'),
+                ],
+              ),
+              const SizedBox(height: 10),
               Column(
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
+                      foregroundColor: Colors.pinkAccent,
+                      backgroundColor: Colors.orangeAccent,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(80.0),
+                      ),
+                      padding: const EdgeInsets.all(0.0),
+                      elevation: 0.0, // Text color
+                    ),
+                    onPressed: _login,
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                            begin: Alignment.centerRight,
+                            end: Alignment.centerLeft,
+                            colors: [Colors.orange, Colors.pinkAccent]),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Container(
+                        constraints: const BoxConstraints(
+                            maxWidth: 500.0, minHeight: 50.0),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          "LOGIN",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w300),
+                        ),
                       ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Cek username dan password
-                        String? enteredUsername = _controllerUsername.text;
-                        String? enteredPassword = _controllerPassword.text;
-                        if (_userAccounts[enteredUsername] == enteredPassword) {
-                          // Autentikasi berhasil
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MyHomePage(),
-                            ),
-                          );
-                        } else {
-                          // Autentikasi gagal
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Invalid username or password.'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    child: const Text("Login"),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Don't have an account?"),
+                      const Text("Belum mempunyai akun?"),
                       TextButton(
-                        onPressed: () {
-                          
-                        },
-                        child: const Text("Signup"),
+                        onPressed: () {},
+                        child: const Text("Daftar disini!"),
                       ),
                     ],
                   ),
