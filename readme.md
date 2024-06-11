@@ -77,6 +77,11 @@ git clone -b week-12 https://github.com/riyanada/pemrograman-mobile.git
 git clone -b week-13 https://github.com/riyanada/pemrograman-mobile.git
 ```
 
+### Week 14 - Tugas
+```sh
+git clone -b uts https://github.com/riyanada/pemrograman-mobile.git
+```
+
 ## Link deploy
 - 
 
