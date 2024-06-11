@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'student_list_page.dart';
 
 class Prodi {
   final String name;
@@ -11,6 +12,7 @@ class ProdiPage extends StatelessWidget {
   ProdiPage({super.key});
 
   final List<Prodi> prodiList = [
+    Prodi('D3 - Broadcasting', 'Program Studi TV dan Perfilman'),
     Prodi('D3 - Teknik Mesin', 'Program Studi Teknik Mesin'),
     Prodi('D3 - Teknik Elektronika', 'Program Studi Teknik Elektro'),
     Prodi('D3 - Teknik Kimia', 'Program Studi Teknik Kimia'),
@@ -45,13 +47,20 @@ class ProdiPage extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return Card(
               elevation: 2,
-              margin: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 16),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: ListTile(
                 title: Text(prodiList[index].name),
                 subtitle: Text(prodiList[index].description),
                 onTap: () {
+                  List<String> parts = prodiList[index].name.split('- ');
+                  String prodiName =
+                      parts.length > 1 ? parts[1].trim() : parts[0];
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StudentListPage(prodi: prodiName),
+                    ),
+                  );
                 },
               ),
             );

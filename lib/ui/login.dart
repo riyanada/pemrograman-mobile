@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:login_flutter/page.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,13 +26,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (isLoggedIn) {
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (context) => const MyHomePage()),
       );
     } else {
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
@@ -49,7 +51,6 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoginPageState createState() => _LoginPageState();
 }
 
@@ -60,58 +61,94 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerPassword = TextEditingController();
 
   bool _obscurePassword = true;
-  final Map<String, String> _userAccounts = {
-    'riyanada': 'P4ssw0rd',
-    'adariyan': 'P4ssw0rd',
-  };
+  bool _isLoading = false;
 
   Future<void> _login() async {
     if (_formKey.currentState?.validate() ?? false) {
       String enteredUsername = _controllerUsername.text;
       String enteredPassword = _controllerPassword.text;
 
-      if (_userAccounts[enteredUsername] == enteredPassword) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isLoggedIn', true);
+      setState(() {
+        _isLoading = true;
+      });
 
-        showDialog(
-          // ignore: use_build_context_synchronously
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Login Berhasil'),
-              content: Text('Selamat Datang, $enteredUsername!'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Tutup dialog
-                  },
-                  child: const Text('Batal'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyHomePage(),
-                      ),
-                    );
-                  },
-                  child: const Text('Ya'),
-                ),
-              ],
+      try {
+        final response = await http.post(
+          Uri.parse('http://rismayana.diary-project.com/login.php'),
+          body: jsonEncode({
+            'username': enteredUsername,
+            'password': enteredPassword,
+          }),
+        );
+
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        if (response.statusCode == 200) {
+          if (responseData['status'] == 0) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('isLoggedIn', true);
+
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Login Berhasil'),
+                  content: Text('Selamat Datang, ${responseData['username']}!'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Tutup dialog
+                      },
+                      child: const Text('Batal'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyHomePage(),
+                          ),
+                        );
+                      },
+                      child: const Text('Ya'),
+                    ),
+                  ],
+                );
+              },
             );
-          },
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid username or password.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+          } else {
+            _showErrorDialog('Login Gagal', responseData['message']);
+          }
+        } else {
+          _showErrorDialog('Login Gagal', responseData['message']);
+        }
+      } catch (e) {
+        _showErrorDialog('Error', 'Terjadi kesalahan: $e');
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
+  }
+
+  void _showErrorDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -156,8 +193,6 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter username.";
-                  } else if (!_userAccounts.containsKey(value)) {
-                    return "Username is not registered.";
                   }
                   return null;
                 },
@@ -191,8 +226,6 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter password.";
-                  } else if (value != _userAccounts[_controllerUsername.text]) {
-                    return "Wrong password.";
                   }
                   return null;
                 },
@@ -201,10 +234,8 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 children: [
                   Checkbox(
-                    value: false, // Tambahkan logika Remember Me di sini
-                    onChanged: (bool? value) {
-                      // Tambahkan logika Remember Me di sini
-                    },
+                    value: false,
+                    onChanged: (bool? value) {},
                   ),
                   const Text('Remember Me'),
                 ],
@@ -222,26 +253,35 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.all(0.0),
                       elevation: 0.0, // Text color
                     ),
-                    onPressed: _login,
+                    onPressed: _isLoading ? null : _login,
                     child: Ink(
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                            begin: Alignment.centerRight,
-                            end: Alignment.centerLeft,
-                            colors: [Colors.orange, Colors.pinkAccent]),
+                          begin: Alignment.centerRight,
+                          end: Alignment.centerLeft,
+                          colors: [Colors.orange, Colors.pinkAccent],
+                        ),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Container(
                         constraints: const BoxConstraints(
-                            maxWidth: 500.0, minHeight: 50.0),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "LOGIN",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w300),
+                          maxWidth: 500.0,
+                          minHeight: 50.0,
                         ),
+                        alignment: Alignment.center,
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
+                            : const Text(
+                                "LOGIN",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
                       ),
                     ),
                   ),
